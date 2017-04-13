@@ -10,29 +10,32 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR szStr, int iCmdSh
 {
 	WNDCLASSEX wcex;
 
+	//ウィンドウの設定
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInst;
-	wcex.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
+	wcex.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = (LPCTSTR)"Hello,World";
-	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
-
+	wcex.lpszClassName = TEXT("HELLO");
+	wcex.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+	
+	//ウィンドウの登録
 	if (!RegisterClassEx(&wcex)) {
 		MessageBox(NULL, _T("Call to RegisterClassEx failed!"), _T("Win32 Guided Tour"), NULL);
 
 		return 1;
 	}
 
+	//ウィンドウの生成
 	HWND hWnd = CreateWindow(
-		(LPCTSTR)"Hello,World",
-		NULL,
-		WS_OVERLAPPED,
+		wcex.lpszClassName,
+		TEXT("Hello World"),
+		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		500, 100,
 		NULL,
@@ -77,6 +80,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		break; 
 	case WM_DESTROY: PostQuitMessage(0); 
 		break; 
+	case WM_RBUTTONUP:
+		DestroyWindow(hWnd);
+		PostQuitMessage(0);
+		return 0;
 	default: 
 			return DefWindowProc(hWnd, message, wParam, lParam); 
 			break; 
